@@ -1,3 +1,3 @@
 from django.contrib import admin
 
-admin.site.
+# Register your models here.
