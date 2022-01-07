@@ -70,6 +70,9 @@ class Recipe(models.Model):
         verbose_name='Дата публикации',
     )
 
+    class Meta:
+        ordering = ['-pub_date']
+
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
