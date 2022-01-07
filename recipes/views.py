@@ -3,5 +3,5 @@ from recipes.models import Recipe
 
 
 def index(request):
-    recipe_list = Recipe.objects.all()
-    return render(request, 'index.html')
+    recipes = Recipe.objects.all().select_related('author').prefetch_related('tags')
+    return render(request, 'index.html', {'recipes': recipes})

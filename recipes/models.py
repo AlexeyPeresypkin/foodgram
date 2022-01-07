@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'user_{0}/{1}'.format(instance.user.id, filename)
+    return 'user_{0}/{1}'.format(instance.author.id, filename)
 
 
 User = get_user_model()
@@ -29,15 +29,29 @@ class Ingridient(models.Model):
         verbose_name_plural = 'Игридиенты'
 
 
-class Recipe(models.Model):
-    TAGS = (
-        ('BR', 'Завтрак'),
-        ('LU', 'Обед'),
-        ('DN', 'Ужин')
+class Tags(models.Model):
+    title = models.CharField(
+        max_length=128,
+        verbose_name='Тег',
     )
+    checkbox_style = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    class Meta:
+        ordering = ['title']
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+    def __str__(self):
+        return self.title
+
+
+class Recipe(models.Model):
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
-                               verbose_name='автор',
+                               verbose_name='Автор',
                                related_name='recipes'
                                )
     title = models.CharField(
@@ -55,11 +69,14 @@ class Recipe(models.Model):
         through='RecipeIngredient',
         related_name='ingridients'
     )
-    Tag = models.CharField(
-        max_length=2, choices=TAGS
+    tags = models.ManyToManyField(
+        Tags,
+        verbose_name='Тег',
+        related_name='tags'
     )
     time_cooking = models.SmallIntegerField(
-        verbose_name='Время приготовления (мин)'
+        verbose_name='Время приготовления (мин)',
+        validators=[MinValueValidator(1)],
     )
     slug = models.SlugField(
         db_index=True,
@@ -71,7 +88,16 @@ class Recipe(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
         ordering = ['-pub_date']
+
+    def __str__(self):
+        return self.title
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
 
 
 class RecipeIngredient(models.Model):
@@ -92,9 +118,11 @@ class RecipeIngredient(models.Model):
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
                              related_name='follower')  # подписчик
-    author = models.ForeignKey(User, on_delete=models.CASCADE,
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
                                related_name='following')  # автор
 
     def __str__(self):
@@ -112,3 +140,5 @@ class Follow(models.Model):
         ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+
+

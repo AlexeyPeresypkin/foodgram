@@ -18,7 +18,8 @@
     <div class="main__header">
         <h1 class="main__title">
             {% block main_title %}Добавь заголовок{% endblock %}</h1>
-        {% include 'includes/tags.html' %}
+        {% block tags %}{% endblock %}
+
     </div>
     <div class="card-list">
         {% block content %}{% endblock %}
