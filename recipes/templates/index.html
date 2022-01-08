@@ -17,7 +17,9 @@
             {% include 'includes/recipe_card.html' with recipes=recipes %}
         {% endfor %}
     </div>
+    {% include 'includes/paginator.html' %}
 {% endblock %}
+
 
 {% block script %}
     <script src="../static/js/components/Purchases.js"></script>

@@ -12,21 +12,28 @@
 {% endblock %}
 
 {% block content %}
-    {{ form.as_p }}
     <div class="form-container">
-        <form class="form">
+        <form class="form" method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
             <div class="form__group">
                 <label for="id_first_name" class="form__label">Имя</label>
                 <div class="form__field-group">
                     <input type="text" name="first_name" id="id_first_name" class="form__input">
-                    <span class="form__error"></span>
+                    <span class="form__error"> {{ form.first_name.errors }}</span>
+                </div>
+            </div>
+            <div class="form__group">
+                <label for="id_last_name" class="form__label">Фамилия</label>
+                <div class="form__field-group">
+                    <input type="text" name="first_name" id="id_first_name" class="form__input">
+                    <span class="form__error"> {{ form.last_name.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
                 <label for="id_username" class="form__label">Имя пользователя</label>
                 <div class="form__field-group">
                     <input type="text" name="username" id="id_username" class="form__input">
-                    <span class="form__error">Имя пользователя и пароль не совпадают. Введите правильные данные.
+                    <span class="form__error">{{ form.username.errors }}
                     </span>
                 </div>
             </div>
@@ -34,14 +41,21 @@
                 <label for="id_email" class="form__label">Адрес электронной почты</label>
                 <div class="form__field-group">
                     <input type="email" name="email" id="id_email" class="form__input">
-                    <span class="form__error"></span>
+                    <span class="form__error"> {{ form.email.errors }} </span>
                 </div>
             </div>
             <div class="form__group">
-                <label for="id_password" class="form__label">Пароль</label>
+                <label for="id_password1" class="form__label">Пароль</label>
                 <div class="form__field-group">
-                    <input type="password" name="password" id="id_password" class="form__input">
-                    <span class="form__error"></span>
+                    <input type="password" name="password1" id="id_password1" class="form__input">
+                    <span class="form__error">{{ form.password1.errors }}</span>
+                </div>
+            </div>
+            <div class="form__group">
+                <label for="id_password2" class="form__label">Подтверждение пароля</label>
+                <div class="form__field-group">
+                    <input type="password" name="password2" id="id_password2" class="form__input">
+                    <span class="form__error">{{ form.password2.errors }}</span>
                 </div>
             </div>
             <div class="form__footer">
