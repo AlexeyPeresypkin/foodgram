@@ -1,51 +1,23 @@
 {% extends 'base.html' %}
 {% block title %} Рецепты {% endblock %}
-
-{% block content %}
-    {% for recipe in recipes %}
-        <div class="card" data-id="120">
-            {% load thumbnail %}
-            {% thumbnail recipe.image "364x240" crop="center" upscale=True as im %}
-                <a href="#" class="link" target="_blank"><img
-                        src="{{ im.url }}" alt="Какой-то текст"
-                        class="card__image"></a>
-            {% endthumbnail %}
-
-            <div class="card__body">
-                <a class="card__title link" href="#"
-                   target="_blank">{{ recipe.title }}</a>
-                <ul class="card__items">
-                    {% for tag in recipe.tags.all %}
-                        <li class="card__item"><span
-                                class="badge badge_style_{{ tag.checkbox_style }}">{{ tag.title }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <div class="card__items card__items_column">
-                    <p class="card__text"><span
-                            class="icon-time"></span> {{ recipe.time_cooking }}
-                    </p>
-                    <p class="card__text"><span class="icon-user"></span> <a
-                            href="#"
-                            style="color: black">{{ recipe.author.first_name }} {{ recipe.author.last_name }}</a>
-                    </p>
-                </div>
-            </div>
-            <div class="card__footer">
-                <button class="button button_style_light-blue" name="purchases"
-                        data-out><span class="icon-plus button__icon"></span>Добавить
-                    в покупки
-                </button>
-                <button class="button button_style_none" name="favorites"
-                        data-out><span class="icon-favorite"></span></button>
-            </div>
-        </div>
-    {% endfor %}
-
+{% block css %}
+    <link rel="stylesheet" href="../static/pages/index.css">
 {% endblock %}
 
-{% block main_title %} Рецепты {% endblock %}
-{% block tags %} {% include 'includes/tags.html' %} {% endblock %}
+{% block header %}
+    <div class="main__header">
+        <h1 class="main__title">Рецепты </h1>
+        {% include 'includes/tags.html' %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card-list">
+        {% for recipe in recipes %}
+            {% include 'includes/recipe_card.html' with recipes=recipes %}
+        {% endfor %}
+    </div>
+{% endblock %}
 
 {% block script %}
     <script src="../static/js/components/Purchases.js"></script>

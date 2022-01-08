@@ -7,7 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> {% block title %} FoodGram {% endblock %} </title>
     {% load static %}
-    <link rel="stylesheet" href="../static/pages/index.css">
+{% block css %} {% endblock %}
+
 </head>
 
 <body class="body">
@@ -15,21 +16,14 @@
 {% include 'includes/nav.html' %}
 
 <main class="main container">
-    <div class="main__header">
-        <h1 class="main__title">
-            {% block main_title %}Добавь заголовок{% endblock %}</h1>
-        {% block tags %}{% endblock %}
-
-    </div>
-    <div class="card-list">
-        {% block content %}{% endblock %}
-    </div>
-    {% include 'includes/paginator.html' %}
+    {% block header %}Добавь заголовок{% endblock %}
+    {% block content %}{% endblock %}
+{% include 'includes/paginator.html' %}
 </main>
 
 {% include 'includes/footer.html' %}
-
 {% block script %} {% endblock %}
 
 </body>
+
 </html>
