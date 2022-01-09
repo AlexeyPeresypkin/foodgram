@@ -15,19 +15,31 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.flatpages import views
 from django.urls import path, include
 
 from foodgram import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("auth/", include("users.urls")),
-    #  если нужного шаблона для /auth не нашлось в файле users.urls —
-    #  ищем совпадения в файле django.contrib.auth.urls
-    path("auth/", include("django.contrib.auth.urls")),
+    path(
+        'about-author/',
+        views.flatpage, {'url': 'about-author/'},
+        name='about_author'
+    ),
+    path(
+        'about-spec/',
+        views.flatpage,
+        {'url': 'about-spec/'},
+        name='about_spec'
+    ),
+    path('auth/', include("users.urls")),
+    path('auth/', include("django.contrib.auth.urls")),
     path('', include('recipes.urls')),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
