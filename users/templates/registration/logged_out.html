@@ -2,15 +2,17 @@
 {% block title %} Вы вышли {% endblock %}
 {% load static %}
 {% block css %}
-    <link rel="stylesheet" href="{% static 'pages/form.css' %}">
+    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock %}
 
-{% block header %}
-    <div class="main__header">
-        <h1 class="main__title"> Ждём вас снова ;) </h1>
+
+{% block content %}
+    <div class="custom-center-block">
+        <p class="custom-text-block">До скорых встреч ;)</p>
+        <div class="custom-button-block">
+            <li class="nav__item"><a href="{% url 'index' %}" class="button button_style_blue">Перейти на главную</a></li>
+        </div>
     </div>
 {% endblock %}
-
-
 
 

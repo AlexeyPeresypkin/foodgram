@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from recipes.views import index
+from recipes.views import RecipesListView, RecipeDetailView
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', RecipesListView.as_view(), name='index'),
+    path('recipe/<int:pk>/', RecipeDetailView.as_view(), name='recipe-detail'),
 ]

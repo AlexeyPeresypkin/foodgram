@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 def user_directory_path(instance, filename):
@@ -98,6 +99,9 @@ class Recipe(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
+
+    def get_absolute_url(self):
+        return reverse('recipe-detail', kwargs={'pk': self.pk})
 
 
 class RecipeIngredient(models.Model):
