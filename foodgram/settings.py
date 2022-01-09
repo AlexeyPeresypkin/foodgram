@@ -29,8 +29,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'users',
     'recipes',
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,3 +127,5 @@ THUMBNAIL_DEBUG = True
 LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "index"
 # LOGOUT_REDIRECT_URL = "index"
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
