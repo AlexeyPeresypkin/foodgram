@@ -1,13 +1,13 @@
 <div class="card" data-id="120">
             {% load thumbnail %}
             {% thumbnail recipe.image "364x240" crop="center" upscale=True as im %}
-                <a href="{% url 'recipe-detail' recipe.pk %}" class="link" target="_blank"><img
+                <a href="{% url 'recipe_detail' recipe.pk %}" class="link" target="_blank"><img
                         src="{{ im.url }}" alt="{{ recipe.title }}"
                         class="card__image"></a>
             {% endthumbnail %}
 
             <div class="card__body">
-                <a class="card__title link" href="{% url 'recipe-detail' recipe.pk %}"
+                <a class="card__title link" href="{% url 'recipe_detail' recipe.pk %}"
                    target="_blank">{{ recipe.title }}</a>
                 <ul class="card__items">
                     {% for tag in recipe.tags.all %}

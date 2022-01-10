@@ -108,7 +108,7 @@ class Recipe(models.Model):
         super().save(force_insert, force_update, using, update_fields)
 
     def get_absolute_url(self):
-        return reverse('recipe-detail', kwargs={'pk': self.pk})
+        return reverse('recipe_detail', kwargs={'pk': self.pk})
 
 
 class RecipeIngredient(models.Model):

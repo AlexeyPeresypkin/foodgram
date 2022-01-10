@@ -40,4 +40,17 @@ class RecipesByAuthor(ListView):
 
 
 class RecipeCreateView(CreateView):
-    pass
+    model = Recipe
+    template_name = 'recipe_create.html'
+    fields = ['title',
+              'tags',
+              'ingridients',
+              'time_cooking',
+              'description',
+              'image',
+              ]
+
+
+
+
+
