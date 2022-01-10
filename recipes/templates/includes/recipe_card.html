@@ -1,13 +1,13 @@
 <div class="card" data-id="120">
             {% load thumbnail %}
             {% thumbnail recipe.image "364x240" crop="center" upscale=True as im %}
-                <a href="#" class="link" target="_blank"><img
-                        src="{{ im.url }}" alt="Какой-то текст"
+                <a href="{% url 'recipe-detail' recipe.pk %}" class="link" target="_blank"><img
+                        src="{{ im.url }}" alt="{{ recipe.title }}"
                         class="card__image"></a>
             {% endthumbnail %}
 
             <div class="card__body">
-                <a class="card__title link" href="#"
+                <a class="card__title link" href="{% url 'recipe-detail' recipe.pk %}"
                    target="_blank">{{ recipe.title }}</a>
                 <ul class="card__items">
                     {% for tag in recipe.tags.all %}
@@ -21,8 +21,8 @@
                             class="icon-time"></span> {{ recipe.time_cooking }}
                     </p>
                     <p class="card__text"><span class="icon-user"></span> <a
-                            href="#"
-                            style="color: black">{{ recipe.author.username }} </a>
+                            href="{% url 'recipes_by_author' recipe.author.id %}"
+                            style="color: black">{{ recipe.author }} </a>
                     </p>
                 </div>
             </div>

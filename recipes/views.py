@@ -1,8 +1,10 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.contrib.auth import get_user_model
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView, CreateView
 
 from recipes.models import Recipe
 
+User = get_user_model()
 
 # def index(request):
 #     recipes = Recipe.objects.all().select_related('author').prefetch_related('tags')
@@ -23,6 +25,19 @@ class RecipeDetailView(DetailView):
     model = Recipe
     template_name = 'recipe_detail.html'
     context_object_name = 'recipe'
-    queryset = Recipe.objects.filter(pk=1).select_related('author').prefetch_related('tags')
 
 
+class RecipesByAuthor(ListView):
+    model = Recipe
+    template_name = 'recipes_by_author.html'
+    context_object_name = 'recipes'
+
+    def get_queryset(self):
+        author = get_object_or_404(User, pk=self.kwargs['pk'])
+        return Recipe.objects.filter(author=author).\
+            select_related('author').\
+            prefetch_related('tags')
+
+
+class RecipeCreateView(CreateView):
+    pass

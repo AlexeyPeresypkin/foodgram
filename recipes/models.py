@@ -2,12 +2,19 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'user_{0}/{1}'.format(instance.author.id, filename)
 
+
+def get_first_name(self):
+    return f'{self.first_name} {self.last_name}' or self.username
+
+
+User.add_to_class("__str__", get_first_name)
 
 User = get_user_model()
 
@@ -144,5 +151,3 @@ class Follow(models.Model):
         ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-
-
