@@ -7,7 +7,7 @@
                 </li>
                 {% if user.is_authenticated %}
 
-                    <li class="nav__item"><a href="#" class="nav__link link">Мои
+                    <li class="nav__item"><a href="{% url 'recipes_follow' user.id %}" class="nav__link link">Мои
                         подписки</a></li>
                     <li class="nav__item"><a href="{% url 'recipe_create' %}" class="nav__link link">Создать
                         рецепт</a></li>

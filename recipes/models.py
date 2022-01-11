@@ -11,7 +11,10 @@ def user_directory_path(instance, filename):
 
 
 def get_first_name(self):
-    return f'{self.first_name} {self.last_name}' or self.username
+    if self.first_name:
+        return f'{self.first_name} {self.last_name}'
+    else:
+        return self.username
 
 
 User.add_to_class("__str__", get_first_name)

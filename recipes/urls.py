@@ -17,11 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from recipes.views import RecipesListView, RecipeDetailView, RecipesByAuthor, \
-    recipe_create
+    recipe_create, RecipesFollow
 
 urlpatterns = [
     path('', RecipesListView.as_view(), name='index'),
     path('recipe/<int:pk>/', RecipeDetailView.as_view(), name='recipe_detail'),
+    path('recipe/follow/<int:pk>', RecipesFollow.as_view(), name='recipes_follow'),
     path('recipe/new/', recipe_create, name='recipe_create'),
     path('author/<int:pk>/', RecipesByAuthor.as_view(), name='recipes_by_author'),
 ]
