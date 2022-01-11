@@ -2,14 +2,10 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
 
+from recipes.forms import RecipeForm
 from recipes.models import Recipe
 
 User = get_user_model()
-
-# def index(request):
-#     recipes = Recipe.objects.all().select_related('author').prefetch_related('tags')
-#     print(recipes.query)
-#     return render(request, 'index.html', {'recipes': recipes})
 
 
 class RecipesListView(ListView):
@@ -34,23 +30,19 @@ class RecipesByAuthor(ListView):
 
     def get_queryset(self):
         author = get_object_or_404(User, pk=self.kwargs['pk'])
-        return Recipe.objects.filter(author=author).\
-            select_related('author').\
+        return Recipe.objects.filter(author=author). \
+            select_related('author'). \
             prefetch_related('tags')
 
 
-class RecipeCreateView(CreateView):
-    model = Recipe
-    template_name = 'recipe_create.html'
-    fields = ['title',
-              'tags',
-              'ingridients',
-              'time_cooking',
-              'description',
-              'image',
-              ]
-
-
-
-
-
+def recipe_create(request):
+    form = RecipeForm(request.POST or None, files=request.FILES or None)
+    post = request.POST.items()
+    for k,v in post:
+        print( k, v)
+    # print(dir(request))
+    # print(request.user)
+    # print(post['time_cooking'])
+    if form.is_valid():
+        return render(request, 'recipe_create.html', context={'form': form})
+    return render(request, 'recipe_create.html', context={'form': form})
