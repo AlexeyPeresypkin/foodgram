@@ -1,20 +1,44 @@
-    <nav class="pagination" aria-label="Search results pages">
-        <ul class="pagination__container">
+<nav class="pagination" aria-label="Search results pages">
+    <ul class="pagination__container">
+        {% if page_obj.has_previous %}
             <li class="pagination__item"><a class="pagination__link link"
-                                            href="#"><span
+                                            href="?page={{ page_obj.previous_page_number }}"><span
                     class="icon-left"></span></a></li>
-            <li class="pagination__item pagination__item_active"><a
-                    class="pagination__link link" href="#">1</a></li>
+        {% endif %}
+        {% for num in paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="pagination__item pagination__item_active"><a
+                        class="pagination__link link">{{ page_obj.number }}</a>
+                </li>
+            {% else %}
+                <!-- For the 1st page we do not use ?page=1 -->
+                {% if num == 1 %}
+                    <li class="pagination__item"><a
+                            class="pagination__link link"
+                            href="?page=1">1</a></li>
+                {% else %}
+                    <!-- Show current page and +-3 pages -->
+                    {% if num|add:"-3" <= page_obj.number and page_obj.number <= num|add:"3" %}
+                        <li class="pagination__item"><a
+                                class="pagination__link link"
+                                href="?page={{ num }}">{{ num }}</a></li>
+                        <!-- Shows every 10th page and the last page -->
+                    {% elif num|divisibleby:"10" or num == page_obj.paginator.num_pages %}
+                        <li class="pagination__item"><a
+                                class="pagination__link link"
+                                href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
             <li class="pagination__item"><a class="pagination__link link"
-                                            href="#">2</a></li>
-            <li class="pagination__item"><a class="pagination__link link"
-                                            href="#">3</a></li>
-            <li class="pagination__item"><a class="pagination__link link"
-                                            href="#">4</a></li>
-            <li class="pagination__item"><a class="pagination__link link"
-                                            href="#">5</a></li>
-            <li class="pagination__item"><a class="pagination__link link"
-                                            href="#"><span
+                                            href="?page={{ page_obj.next_page_number }}"><span
                     class="icon-right"></span></a></li>
-        </ul>
-    </nav>
+        {% endif %}
+    </ul>
+</nav>
+
+
+
+

@@ -7,18 +7,21 @@
 
 {% block header %}
     <div class="main__header">
-        <h1 class="main__title">Рецепты </h1>
+        <h1 class="main__title">Рецепты {{ page_obj.has_other_pages }}</h1>
         {% include 'includes/tags.html' %}
     </div>
 {% endblock %}
 
 {% block content %}
     <div class="card-list">
-        {% for recipe in recipes %}
-            {% include 'includes/recipe_card.html' with recipes=recipes %}
+        {% for recipe in page_obj.object_list %}
+            {% include 'includes/recipe_card.html' with recipe=recipe %}
         {% endfor %}
     </div>
-    {% include 'includes/paginator.html' %}
+    {% if page_obj.has_other_pages %}
+        {% include 'includes/paginator.html' with page_obj=page_obj paginator=paginator %}
+    {% endif %}
+
 {% endblock %}
 
 

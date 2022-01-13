@@ -1,23 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Рецепты {% endblock %}
+{% block title %} Мои подписки {% endblock %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'pages/myFollow.css' %}">
 {% endblock %}
 
 {% block header %}
     <div class="main__header">
-        <h1 class="main__title"> Мои подписки </h1>
+        <h1 class="main__title"> Мои подписки  </h1>
     </div>
 {% endblock %}
 
 {% block content %}
     <div class="card-list">
-        {% for author in authors %}
+        {% for author in page_obj.object_list %}
             {% include 'includes/recipe_card_by_author.html' with author=author %}
         {% endfor %}
     </div>
-    {% include 'includes/paginator.html' %}
+    {% if page_obj.has_other_pages %}
+        {% include 'includes/paginator.html' with page_obj=page_obj paginator=paginator %}
+    {% endif %}
 {% endblock %}
 
 
