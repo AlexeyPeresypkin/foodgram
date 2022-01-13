@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
 
+from foodgram.settings import PAGINATE_COUNT
 from recipes.forms import RecipeForm
 from recipes.models import Recipe
 
@@ -10,6 +11,7 @@ User = get_user_model()
 
 
 class RecipesListView(ListView):
+    paginate_by = PAGINATE_COUNT
     model = Recipe
     template_name = 'index.html'
     context_object_name = 'recipes'
@@ -41,7 +43,8 @@ class RecipesFollow(LoginRequiredMixin, ListView):
     context_object_name = 'authors'
 
     def get_queryset(self):
-        user = self.request.user
+        user = get_object_or_404(User, username=self.kwargs['pk'])
+        # user = self.request.user
         follows = user.follower.all().values_list('author_id', flat=True)
         authors = User.objects.filter(id__in=list(follows))
         return authors
@@ -62,16 +65,16 @@ def recipe_create(request):
     return render(request, 'recipe_create.html', context={'form': form})
 
 
-# @login_required
-# def follow_index(request):
-#     # информация о текущем пользователе доступна в переменной request.user
-#     posts = Post.objects.filter(author__following__user=request.user).order_by(
-#         '-pub_date')
-#     paginator = Paginator(posts, 10)
-#     # показывать по 10 записей на странице.
-#     page_number = request.GET.get(
-#         'page')  # переменная в URL с номером запрошенной страницы
-#     page = paginator.get_page(
-#         page_number)  # получить записи с нужным смещением
-#     return render(request, "follow.html",
-#                   {'page': page, 'paginator': paginator})
+def page_not_found(request, exception):
+    # Переменная exception содержит отладочную информацию,
+    # выводить её в шаблон пользователской страницы 404 мы не станем
+    return render(
+        request,
+        "misc/404.html",
+        {"path": request.path},
+        status=404
+    )
+
+
+def server_error(request):
+    return render(request, "misc/500.html", status=500)
