@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Рецепты {% endblock %}
+{% block title %} Избранное {% endblock %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock %}
 
 {% block header %}
     <div class="main__header">
-        <h1 class="main__title">Рецепты </h1>
+        <h1 class="main__title"> Избранное </h1>
         {% include 'includes/tags.html' %}
     </div>
 {% endblock %}
@@ -25,14 +25,16 @@
 
 
 {% block script %}
-    <script src="{% static 'js/components/Purchases.js' %}"></script>
-    <script src="{% static 'js/config/config.js' %}"></script>
-
     <script src="{% static 'js/components/MainCards.js' %}"></script>
-    <script src="{% static 'js/components/SingleCard.js' %}"></script>
+
+    <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static 'js/components/Favorites.js' %}"></script>
+
+    <script src="{% static 'js/config/config.js' %}"></script>
+    <script src="{% static 'js/components/CardList.js' %}"></script>
     <script src="{% static 'js/components/Header.js' %}"></script>
 
     <script src="{% static 'js/api/Api.js' %}"></script>
-    <script src="{% static 'singlePageNotAuth.js' %}"></script>
+    <script src="{% static 'favorite.js' %}"></script>
 {% endblock %}
 

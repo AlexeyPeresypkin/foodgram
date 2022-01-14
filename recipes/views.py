@@ -61,6 +61,19 @@ class RecipesFollow(LoginRequiredMixin, ListView):
         return authors
 
 
+class RecipesFavorite(LoginRequiredMixin, ListView):
+    paginate_by = PAGINATE_COUNT
+    model = Recipe
+    template_name = 'recipes_favorite.html'
+    context_object_name = 'recipes'
+
+    def get_queryset(self):
+        user = get_object_or_404(User, id=self.kwargs.get('pk'))
+        favorites = user.favorites.values_list('recipe_id', flat=True)
+        recipes = Recipe.objects.filter(id__in=list(favorites))
+        return recipes
+
+
 def recipe_create(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     post = request.POST

@@ -10,14 +10,14 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.author.id, filename)
 
 
-def get_first_name(self):
+def get_full_name(self):
     if self.first_name:
         return f'{self.first_name} {self.last_name}'
     else:
         return self.username
 
 
-User.add_to_class("__str__", get_first_name)
+User.add_to_class("__str__", get_full_name)
 
 User = get_user_model()
 
@@ -82,7 +82,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tags,
-        verbose_name='Тег',
+        verbose_name='Теги',
         related_name='tags'
     )
     time_cooking = models.SmallIntegerField(
@@ -154,3 +154,52 @@ class Follow(models.Model):
         ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+
+
+class Favorite(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+        null=True,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+        null=True,
+    )
+
+    def __str__(self):
+        return f'{self.recipe.title}, {self.user}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['recipe', 'user'],
+                                    name='unique_favorites')
+        ]
+        verbose_name = 'Избранный'
+        verbose_name_plural = 'Избранные'
+
+
+class ShopList(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='shop_list',
+        null=True,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='shop_list',
+        null=True,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['recipe', 'user'],
+                                    name='unique_shop_list')
+        ]
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Списки покупок'
