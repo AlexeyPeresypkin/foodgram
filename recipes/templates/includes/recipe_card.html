@@ -1,4 +1,5 @@
-<div class="card" data-id="120">
+{% csrf_token %}
+<div class="card" data-id="{{ recipe.id }}">
     {% load thumbnail %}
     {% thumbnail recipe.image "364x240" crop="center" upscale=True as im %}
         <a href="{% url 'recipe_detail' recipe.pk %}" class="link"
@@ -33,6 +34,11 @@
             в покупки
         </button>
         <button class="button button_style_none" name="favorites"
-                data-out><span class="icon-favorite"></span></button>
+                data-out><span class="icon-favorite 
+                {% if recipe.favorite %}
+                
+                {% endif %} 
+                icon-favorite_active"></span></button>
     </div>
 </div>
+

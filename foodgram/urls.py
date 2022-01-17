@@ -38,6 +38,7 @@ urlpatterns = [
         name='about_spec'
     ),
     path('auth/', include("users.urls")),
+    path('api/', include('api.urls')),
     path('auth/', include("django.contrib.auth.urls")),
     path('', include('recipes.urls')),
 ]
