@@ -6,11 +6,12 @@ from django.views.generic import ListView, DetailView, CreateView
 from foodgram.settings import PAGINATE_COUNT
 from recipes.forms import RecipeForm
 from recipes.models import Recipe
+from recipes.viewmixins import RecipeMixin
 
 User = get_user_model()
 
 
-class RecipesListView(ListView):
+class RecipesListView(RecipeMixin, ListView):
     paginate_by = PAGINATE_COUNT
     model = Recipe
     template_name = 'index.html'
@@ -20,13 +21,11 @@ class RecipesListView(ListView):
         queryset = Recipe.objects.all(). \
             select_related('author'). \
             prefetch_related('tags')
-        print(dir(self.request.GET))
-        print('-------------------------')
         print(self.request.GET.getlist('tag'))
         return queryset
 
 
-class RecipeDetailView(DetailView):
+class RecipeDetailView(RecipeMixin, DetailView):
     model = Recipe
     template_name = 'recipe_detail.html'
     context_object_name = 'recipe'
@@ -35,7 +34,7 @@ class RecipeDetailView(DetailView):
 class RecipesByAuthor(ListView):
     paginate_by = PAGINATE_COUNT
     template_name = 'recipes_by_author.html'
-    context_object_name = 'recipes'
+    # context_object_name = 'recipes'
 
     def get_queryset(self):
         author = get_object_or_404(User, id=self.kwargs.get('pk'))
@@ -107,23 +106,5 @@ def server_error(request):
     return render(request, "misc/500.html", status=500)
 
 
-class RecipeMixin:
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context["tags"] = RecipeTag.objects.all()
-        if self.request.user.is_authenticated:
-            context[
-                "favorite_list"
-            ] = self.request.user.favorites.all().values_list(
-                "recipe_id", flat=True
-            )
-            context["subscribers"] = (
-                self.request.user.follower.all()
-                .values_list("author__id", flat=True)
-                .distinct()
-            )
-            context["cart_list"] = ShoppingList.objects.filter(
-                user=self.request.user
-            ).values_list("recipe__id", flat=True)
 
-        return context
+
