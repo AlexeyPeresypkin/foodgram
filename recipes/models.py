@@ -49,9 +49,12 @@ class Tags(models.Model):
         max_length=20,
         blank=True
     )
+    slug = models.SlugField(
+        'Слаг для шаблонов',
+        unique=True,
+    )
 
     class Meta:
-        ordering = ['title']
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 

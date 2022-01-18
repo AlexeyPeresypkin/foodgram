@@ -1,8 +1,9 @@
+{% load recipes_extras %}
 <nav class="pagination" aria-label="Search results pages">
     <ul class="pagination__container">
         {% if page_obj.has_previous %}
             <li class="pagination__item"><a class="pagination__link link"
-                                            href="?page={{ page_obj.previous_page_number }}"><span
+                                            href="?{% url_replace page=page_obj.previous_page_number%}"><span
                     class="icon-left"></span></a></li>
         {% endif %}
         {% for num in paginator.page_range %}
@@ -15,25 +16,27 @@
                 {% if num == 1 %}
                     <li class="pagination__item"><a
                             class="pagination__link link"
-                            href="?page=1">1</a></li>
+                            href="?{% url_replace page=1 %} ">1</a></li>
                 {% else %}
                     <!-- Show current page and +-3 pages -->
                     {% if num|add:"-3" <= page_obj.number and page_obj.number <= num|add:"3" %}
                         <li class="pagination__item"><a
                                 class="pagination__link link"
-                                href="?page={{ num }}">{{ num }}</a></li>
+                                href="?{% url_replace page=num%}">{{ num }}</a>
+                        </li>
                         <!-- Shows every 10th page and the last page -->
                     {% elif num|divisibleby:"10" or num == page_obj.paginator.num_pages %}
                         <li class="pagination__item"><a
                                 class="pagination__link link"
-                                href="?page={{ num }}">{{ num }}</a></li>
+                                href="?{% url_replace page=num%}">{{ num }}</a>
+                        </li>
                     {% endif %}
                 {% endif %}
             {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
             <li class="pagination__item"><a class="pagination__link link"
-                                            href="?page={{ page_obj.next_page_number }}"><span
+                                            href="?{% url_replace page=page_obj.next_page_number%}"><span
                     class="icon-right"></span></a></li>
         {% endif %}
     </ul>
