@@ -11,17 +11,44 @@
     </div>
 {% endblock %}
 
+{#{% block content %}#}
+{#    {{ form.title.id_for_label }}#}
+{#    {% for tag in form.tags %}#}
+{#        <p>{{ tag }}</p>#}
+{#    {% endfor %}#}
+{#    <p>{{ form.tags.field.choices }}</p>#}
+{#    {% for tag_choice, tag in form.tags.field.choices %}#}
+{#        <p>{{ tag }}</p>#}
+{#        <p>{{ tag_choice.instance.checkbox_style }}</p>#}
+{##}
+{#    {% endfor %}#}
+{##}
+{##}
+{#    <div class="form-container">#}
+{#        <form class="form" method="post" enctype="multipart/form-data">#}
+{#            {% csrf_token %}#}
+{#            {{ form.as_p }}#}
+{##}
+{#            <div class="form__footer">#}
+{#                <button class="button button_style_blue">Создать рецепт#}
+{#                </button>#}
+{#            </div>#}
+{#        </form>#}
+{#    </div>#}
+{#{% endblock %}#}
+
 {% block content %}
     <div class="form-container">
         <form class="form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-{#            {{ form.as_p }}#}
             <div class="form__group">
                 <label for="{{ form.title.id_for_label }}" class="form__label">Название
                     рецепта</label>
                 <div class="form__field-group">
-                    <input type="text" id="id_title" name="title"
-                           class="form__input">
+                    <input type="text" id="{{ form.title.id_for_label }}"
+                           name="title"
+                           class="form__input" {% if form.is_bound %}
+                           value="{{ form.title.value }}" {% endif %} >
                     {% if form.errors %}
                         {% for error in form.title.errors %}
                             <span class="form__error">{{ error }}</span>
@@ -29,35 +56,25 @@
                     {% endif %}
                 </div>
             </div>
-
             <div class="form__group">
                 <p class="form__label">Теги</p>
                 <div class="form__field-group">
                     <div class="tags">
-                        <div class="tags__item">
-                            <input type="checkbox" name="breakfast"
-                                   id="id_breakfast"
-                                   class="tags__checkbox tags__checkbox_style_orange">
-                            <label for="id_breakfast" class="tags__label">Завтрак</label>
-                        </div>
-                        <div class="tags__item">
-                            <input type="checkbox" name="lunch" id="id_lunch"
-                                   class="tags__checkbox tags__checkbox_style_green"
-                                   checked>
-                            <label for="id_lunch"
-                                   class="tags__label">Обед</label>
-                        </div>
-                        <div class="tags__item">
-                            <input type="checkbox" name="dinner" id="id_dinner"
-                                   class="tags__checkbox tags__checkbox_style_purple"
-                                   checked>
-                            <label for="id_dinner"
-                                   class="tags__label">Ужин</label>
-                        </div>
+                        {% for tag_choice, tag in form.tags.field.choices %}
+                            <div class="tags__item">
+                                <input type="checkbox"
+                                       name="{{ tag_choice.instance.slug }}"
+                                       id="id_{{ tag_choice.instance.slug }}"
+                                       class="tags__checkbox tags__checkbox_style_{{ tag_choice.instance.checkbox_style }}"
+                                       checked>
+                                <label for="id_{{ tag_choice.instance.slug }}"
+                                       class="tags__label">{{ tag_choice.instance }}</label>
+                            </div>
+                        {% endfor %}
                     </div>
                     {% if form.errors %}
                         {% for error in form.tags.errors %}
-                        <span class="form__error">{{ error }}</span>
+                            <span class="form__error">{{ error }}</span>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -83,7 +100,7 @@
                     <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
                     {% if form.errors %}
                         {% for error in form.ingridients.errors %}
-                        <span class="form__error">{{ error }}</span>
+                            <span class="form__error">{{ error }}</span>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -97,25 +114,26 @@
                     <input type="text"
                            id="{{ form.time_cooking.id_for_label }}"
                            name="time_cooking"
-                           class="form__input">
+                           class="form__input" {% if form.is_bound %}
+                           value="{{ form.time_cooking.value }}" {% endif %}>
                     <label for="id_time" class="form__label">минут</label>
                     {% if form.errors %}
                         {% for error in form.time_cooking.errors %}
-                        <span class="form__error">{{ error }}</span>
+                            <span class="form__error">{{ error }}</span>
                         {% endfor %}
                     {% endif %}
                 </div>
             </div>
             <div class="form__group">
-                <label for="{{ form.description.if_for_label }}"
+                <label for="{{ form.description.id_for_label }}"
                        class="form__label">Описание</label>
                 <div class="form__field-group">
                     <textarea name="description"
-                              id="{{ form.description.if_for_label }}" rows="8"
-                              class="form__textarea"></textarea>
+                              id="{{ form.description.id_for_label }}" rows="8"
+                              class="form__textarea">{% if form.is_bound %}{{ form.description.value }}{% endif %}</textarea>
                     {% if form.errors %}
                         {% for error in form.description.errors %}
-                        <span class="form__error">{{ error }}</span>
+                            <span class="form__error">{{ error }}</span>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -123,10 +141,11 @@
             <div class="form__group">
                 <span class="form__label">Загрузить фото</span>
                 <div class="form__field-group">
-                    <input type="file" name="image" id="{{ form.image.if_for_label }}">
+                    <input type="file" name="image"
+                           id="{{ form.image.id_for_label }}">
                     {% if form.errors %}
                         {% for error in form.image.errors %}
-                        <span class="form__error">{{ error }}</span>
+                            <span class="form__error">{{ error }}</span>
                         {% endfor %}
                     {% endif %}
                 </div>

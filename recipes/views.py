@@ -72,18 +72,30 @@ class RecipesFavorite(LoginRequiredMixin, ListView):
 
 
 def recipe_create(request):
-    form = RecipeForm(request.POST or None, files=request.FILES or None)
-    post = request.POST
-    print(post)
-    post_items = request.POST.items()
-    for k, v in post_items:
-        print(k, v)
-    # print(dir(request))
-    # print(request.user)
-    # print(post['time_cooking'])
-    if form.is_valid():
-        return render(request, 'recipe_create.html', context={'form': form})
-    return render(request, 'recipe_create.html', context={'form': form})
+    form = RecipeForm()
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        print(form.is_valid())
+        print(form.cleaned_data)
+        # print(list((request.POST).items()))
+        print(request.POST)
+        if form.is_valid():
+            return render(request, 'recipe_create.html', {'form': form})
+    return render(request, 'recipe_create.html', {'form': form})
+
+    # form = RecipeForm(request.POST or None, files=request.FILES or None)
+    # post = request.POST
+    # print(post)
+    # # print(form)
+    # post_items = request.POST.items()
+    # for k, v in post_items:
+    #     print(k, v)
+    # # print(dir(request))
+    # # print(request.user)
+    # # print(post['time_cooking'])
+    # if form.is_valid():
+    #     return render(request, 'recipe_create.html', context={'form': form})
+    # return render(request, 'recipe_create.html', context={'form': form})
 
 
 def page_not_found(request, exception):
