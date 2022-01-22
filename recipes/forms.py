@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from recipes.models import Recipe
+from recipes.models import Recipe, Tags
 
 
 class RecipeForm(ModelForm):
@@ -9,7 +9,7 @@ class RecipeForm(ModelForm):
         model = Recipe
         fields = ['title',
                   'tags',
-                  # 'ingridients',
+                  'ingridients',
                   'time_cooking',
                   'description',
                   'image',
@@ -17,3 +17,10 @@ class RecipeForm(ModelForm):
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
         }
+
+    def __init__(self, data=None, *args, **kwargs):
+
+        super().__init__(data)
+        if data:
+            for i in data:
+                print(i)

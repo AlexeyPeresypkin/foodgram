@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView
 
 from foodgram.settings import PAGINATE_COUNT
 from recipes.forms import RecipeForm
-from recipes.models import Recipe, Tags
+from recipes.models import Recipe, Tags, Follow
 from recipes.viewmixins import RecipeMixin, TagsMixin
 
 User = get_user_model()
@@ -28,14 +28,31 @@ class RecipesByAuthor(RecipesListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         author = get_object_or_404(User, id=self.kwargs.get('pk'))
-        queryset.filter(author=author)
+        queryset = queryset.filter(author=author)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         author = get_object_or_404(User, id=self.kwargs.get('pk'))
+        follower_list = self.request.user.\
+            follower.values_list('author_id', flat=True)
         context['author'] = author
+        context['follower_list'] = follower_list
         return context
+
+
+class RecipesFavorite(RecipesListView, LoginRequiredMixin):
+    model = Recipe
+    template_name = 'recipes_favorite.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = get_object_or_404(User, id=self.kwargs.get('pk'))
+        favorites = user.favorites.values_list('recipe_id', flat=True)
+        queryset = queryset.filter(id__in=list(favorites))
+        return queryset
+
+
 
 
 class RecipeDetailView(RecipeMixin, DetailView):
@@ -58,27 +75,15 @@ class RecipesFollow(LoginRequiredMixin, ListView):
         return authors
 
 
-class RecipesFavorite(LoginRequiredMixin, ListView):
-    paginate_by = PAGINATE_COUNT
-    model = Recipe
-    template_name = 'recipes_favorite.html'
-    context_object_name = 'recipes'
-
-    def get_queryset(self):
-        user = get_object_or_404(User, id=self.kwargs.get('pk'))
-        favorites = user.favorites.values_list('recipe_id', flat=True)
-        recipes = Recipe.objects.filter(id__in=list(favorites))
-        return recipes
-
-
 def recipe_create(request):
     form = RecipeForm()
     if request.method == 'POST':
-        form = RecipeForm(request.POST)
-        print(form.is_valid())
-        print(form.cleaned_data)
+        form = RecipeForm(request.POST, files=request.FILES)
+        # print(form)
+        # print(form.is_valid())
+        # print(form.cleaned_data)
         # print(list((request.POST).items()))
-        print(request.POST)
+        # print(request.POST)
         if form.is_valid():
             return render(request, 'recipe_create.html', {'form': form})
     return render(request, 'recipe_create.html', {'form': form})

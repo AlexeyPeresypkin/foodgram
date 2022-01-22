@@ -1,13 +1,11 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from api.views import recipe_list
-
-router = DefaultRouter()
-# router.register(r'favorites/', recipe_list)
+from api.views import FavoriteCreateApiView, FavoriteDeleteAPIView, \
+    FollowCreateApiView, FollowDeleteAPIView
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('favorites', recipe_list)
-
+    path('favorites', FavoriteCreateApiView.as_view()),
+    path('favorites/<int:pk>', FavoriteDeleteAPIView.as_view()),
+    path('subscriptions', FollowCreateApiView.as_view()),
+    path('subscriptions/<int:pk>', FollowDeleteAPIView.as_view()),
 ]

@@ -66,7 +66,9 @@
                                        name="{{ tag_choice.instance.slug }}"
                                        id="id_{{ tag_choice.instance.slug }}"
                                        class="tags__checkbox tags__checkbox_style_{{ tag_choice.instance.checkbox_style }}"
-                                       checked>
+                                        {% if form.is_bound %}
+                                       checked
+                                        {% endif %} >
                                 <label for="id_{{ tag_choice.instance.slug }}"
                                        class="tags__label">{{ tag_choice.instance }}</label>
                             </div>
@@ -130,7 +132,8 @@
                 <div class="form__field-group">
                     <textarea name="description"
                               id="{{ form.description.id_for_label }}" rows="8"
-                              class="form__textarea">{% if form.is_bound %}{{ form.description.value }}{% endif %}</textarea>
+                              class="form__textarea">{% if form.is_bound %}
+                        {{ form.description.value }}{% endif %}</textarea>
                     {% if form.errors %}
                         {% for error in form.description.errors %}
                             <span class="form__error">{{ error }}</span>
