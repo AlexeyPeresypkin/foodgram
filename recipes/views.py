@@ -34,7 +34,7 @@ class RecipesByAuthor(RecipesListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         author = get_object_or_404(User, id=self.kwargs.get('pk'))
-        follower_list = self.request.user.\
+        follower_list = self.request.user. \
             follower.values_list('author_id', flat=True)
         context['author'] = author
         context['follower_list'] = follower_list
@@ -53,14 +53,6 @@ class RecipesFavorite(RecipesListView, LoginRequiredMixin):
         return queryset
 
 
-
-
-class RecipeDetailView(RecipeMixin, DetailView):
-    model = Recipe
-    template_name = 'recipe_detail.html'
-    context_object_name = 'recipe'
-
-
 class RecipesFollow(LoginRequiredMixin, ListView):
     paginate_by = PAGINATE_COUNT
     model = Recipe
@@ -69,10 +61,27 @@ class RecipesFollow(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = get_object_or_404(User, id=self.kwargs.get('pk'))
-        # user = self.request.user
         follows = user.follower.all().values_list('author_id', flat=True)
         authors = User.objects.filter(id__in=list(follows)).order_by('-id')
         return authors
+
+
+class ShopList(LoginRequiredMixin, ListView):
+    model = Recipe
+    template_name = 'shopList.html'
+    context_object_name = 'recipes'
+
+    def get_queryset(self):
+        user = get_object_or_404(User, id=self.kwargs.get('pk'))
+        shop_list = user.shop_list.all().values_list('recipe_id', flat=True)
+        recipes = Recipe.objects.filter(id__in=list(shop_list))
+        return recipes
+
+
+class RecipeDetailView(RecipeMixin, DetailView):
+    model = Recipe
+    template_name = 'recipe_detail.html'
+    context_object_name = 'recipe'
 
 
 def recipe_create(request):

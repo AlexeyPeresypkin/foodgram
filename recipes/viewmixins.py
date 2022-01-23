@@ -6,9 +6,13 @@ from .models import Tags, ShopList
 class RecipeMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        favorites = self.request.user.favorites.all(). \
-            values_list('recipe_id', flat=True)
-        context['favorites'] = favorites
+        if self.request.user.is_authenticated:
+            favorites = self.request.user.favorites.all(). \
+                values_list('recipe_id', flat=True)
+            shoplist = self.request.user.shop_list.all().\
+                values_list('recipe_id', flat=True)
+            context['favorites'] = favorites
+            context['shoplist'] = shoplist
         return context
 
 

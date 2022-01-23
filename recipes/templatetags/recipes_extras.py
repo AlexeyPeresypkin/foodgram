@@ -1,4 +1,7 @@
 from django import template
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 register = template.Library()
 
@@ -35,3 +38,9 @@ def url_replace(context, **kwargs):
     query = context['request'].GET.copy()
     query.update(kwargs)
     return query.urlencode()
+
+
+@register.filter()
+def shop_list_count(request):
+    return request.user.shop_list.count()
+
