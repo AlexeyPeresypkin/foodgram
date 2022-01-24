@@ -88,6 +88,7 @@ def recipe_create(request):
     form = RecipeForm()
     if request.method == 'POST':
         form = RecipeForm(request.POST, files=request.FILES)
+        print(request.POST.items())
         # print(form)
         # print(form.is_valid())
         # print(form.cleaned_data)
