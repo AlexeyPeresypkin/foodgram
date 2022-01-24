@@ -11,32 +11,6 @@
     </div>
 {% endblock %}
 
-{#{% block content %}#}
-{#    {{ form.title.id_for_label }}#}
-{#    {% for tag in form.tags %}#}
-{#        <p>{{ tag }}</p>#}
-{#    {% endfor %}#}
-{#    <p>{{ form.tags.field.choices }}</p>#}
-{#    {% for tag_choice, tag in form.tags.field.choices %}#}
-{#        <p>{{ tag }}</p>#}
-{#        <p>{{ tag_choice.instance.checkbox_style }}</p>#}
-{##}
-{#    {% endfor %}#}
-{##}
-{##}
-{#    <div class="form-container">#}
-{#        <form class="form" method="post" enctype="multipart/form-data">#}
-{#            {% csrf_token %}#}
-{#            {{ form.as_p }}#}
-{##}
-{#            <div class="form__footer">#}
-{#                <button class="button button_style_blue">Создать рецепт#}
-{#                </button>#}
-{#            </div>#}
-{#        </form>#}
-{#    </div>#}
-{#{% endblock %}#}
-
 {% block content %}
     <div class="form-container">
         <form class="form" method="post" enctype="multipart/form-data">
@@ -68,7 +42,8 @@
                                        class="tags__checkbox tags__checkbox_style_{{ tag_choice.instance.checkbox_style }}"
                                         {% if form.is_bound %}
                                        checked
-                                        {% endif %} >
+                                        {% endif %}
+                                >
                                 <label for="id_{{ tag_choice.instance.slug }}"
                                        class="tags__label">{{ tag_choice.instance }}</label>
                             </div>
@@ -97,9 +72,36 @@
                         <label for="cantidad" class="form__label"
                                id="cantidadVal">шт.</label>
                     </div>
-                    <div class="form__field-group-ingredientes-container">
-                    </div>
-                    <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
+                    <div class="form__field-group-ingredientes-container"></div>
+                    {% if form.is_bound %}
+                        {% for ing in form.ingridients.value %}
+                        <p>{{ ing.instance.title }}</p>
+                        {% endfor %}
+                        {% for recipe_ingredient in recipe.recipe_ingridient.all %}
+                            <div class="form__field-item-ingredient"
+                                 id="ing_{{ forloop.counter }}">
+                                <span> {{ recipe_ingredient }}</span>
+                                <span class="form__field-item-delete"></span>
+                                <input id="nameIngredient_{{ forloop.counter }}"
+                                       name="nameIngredient_{{ forloop.counter }}"
+                                       type="hidden"
+                                       value="{{ recipe_ingredient.ingredient.title }}"
+                                >
+                                <input id="valueIngredient_{{ forloop.counter }}"
+                                       name="valueIngredient_{{ forloop.counter }}"
+                                       type="hidden"
+                                       value="{{ recipe_ingredient.quantity }}"
+                                >
+                                <input id="unitsIngredient_{{ forloop.counter }}"
+                                       name="unitsIngredient_{{ forloop.counter }}"
+                                       type="hidden"
+                                       value="{{ recipe_ingredient.ingredient.dimension }}"
+                                >
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <span class="form__ingredient-link"
+                          id="addIng">{{ form.is_bound }}Добавить ингредиент</span>
                     {% if form.errors %}
                         {% for error in form.ingridients.errors %}
                             <span class="form__error">{{ error }}</span>
@@ -131,7 +133,8 @@
                 <div class="form__field-group">
                     <textarea name="description"
                               id="{{ form.description.id_for_label }}" rows="8"
-                              class="form__textarea">{% if form.is_bound %}{{ form.description.value }}{% endif %}</textarea>
+                              class="form__textarea">{% if form.is_bound %}
+                        {{ form.description.value }}{% endif %}</textarea>
                     {% if form.errors %}
                         {% for error in form.description.errors %}
                             <span class="form__error">{{ error }}</span>
@@ -158,7 +161,6 @@
         </form>
     </div>
 {% endblock %}
-
 
 {% block script %}
     <script src="{% static 'js/config/config.js' %}"></script>

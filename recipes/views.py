@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 
 from foodgram.settings import PAGINATE_COUNT
@@ -84,33 +85,17 @@ class RecipeDetailView(RecipeMixin, DetailView):
     context_object_name = 'recipe'
 
 
-def recipe_create(request):
-    form = RecipeForm()
-    if request.method == 'POST':
-        form = RecipeForm(request.POST, files=request.FILES)
-        print(request.POST.items())
-        # print(form)
-        # print(form.is_valid())
-        # print(form.cleaned_data)
-        # print(list((request.POST).items()))
-        # print(request.POST)
-        if form.is_valid():
-            return render(request, 'recipe_create.html', {'form': form})
-    return render(request, 'recipe_create.html', {'form': form})
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    model = Recipe
+    template_name = 'recipe_create.html'
+    form_class = RecipeForm
 
-    # form = RecipeForm(request.POST or None, files=request.FILES or None)
-    # post = request.POST
-    # print(post)
-    # # print(form)
-    # post_items = request.POST.items()
-    # for k, v in post_items:
-    #     print(k, v)
-    # # print(dir(request))
-    # # print(request.user)
-    # # print(post['time_cooking'])
-    # if form.is_valid():
-    #     return render(request, 'recipe_create.html', context={'form': form})
-    # return render(request, 'recipe_create.html', context={'form': form})
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('recipe_detail', kwargs={'pk': self.object.pk})
 
 
 def page_not_found(request, exception):
