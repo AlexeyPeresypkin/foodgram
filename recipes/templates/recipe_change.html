@@ -56,7 +56,6 @@
                     {% endif %}
                 </div>
             </div>
-
             <div class="form__group">
                 <label for="nameIngredient"
                        class="form__label">Ингредиенты</label>
@@ -73,19 +72,17 @@
                                id="cantidadVal">шт.</label>
                     </div>
                     <div class="form__field-group-ingredientes-container"></div>
-                    {% if form.is_bound %}
-                        {% for ing in form.ingridients.value %}
-                            <p>{{ ing.instance.title }}</p>
-                        {% endfor %}
+                    {% if form.ingridients %}
                         {% for recipe_ingredient in recipe.recipe_ingridient.all %}
+                            {% csrf_token %}
                             <div class="form__field-item-ingredient"
                                  id="ing_{{ forloop.counter }}">
-                                <span> {{ recipe_ingredient }}</span>
+                                <span> {{ recipe_ingredient.ingridient.title }}</span>
                                 <span class="form__field-item-delete"></span>
                                 <input id="nameIngredient_{{ forloop.counter }}"
                                        name="nameIngredient_{{ forloop.counter }}"
                                        type="hidden"
-                                       value="{{ recipe_ingredient.ingredient.title }}"
+                                       value="{{ recipe_ingredient.ingridient.title }}"
                                 >
                                 <input id="valueIngredient_{{ forloop.counter }}"
                                        name="valueIngredient_{{ forloop.counter }}"
@@ -95,7 +92,7 @@
                                 <input id="unitsIngredient_{{ forloop.counter }}"
                                        name="unitsIngredient_{{ forloop.counter }}"
                                        type="hidden"
-                                       value="{{ recipe_ingredient.ingredient.dimension }}"
+                                       value="{{ recipe_ingredient.ingridient.dimension }}"
                                 >
                             </div>
                         {% endfor %}
@@ -157,12 +154,23 @@
                 </div>
             </div>
             <div class="form__footer">
-                <button class="button button_style_blue">Создать рецепт
-                </button>
+                <button class="button button_style_blue">Сохранить</button>
+                <a style="margin-left: 2.5em" href="#"
+                   class="form__ingredient-link">Удалить</a>
             </div>
         </form>
     </div>
 {% endblock %}
+<div class="form__field-group">
+    <label for="id_file" class="form__file-button">Выбрать файл</label>
+    <input type="file" class="form__file" name="file" id="id_file">
+    <span class="form__error"></span>
+</div>
+</div>
+<div class="form__footer">
+    <button class="button button_style_blue">Сохранить</button>
+    <a style="margin-left: 2.5em" href="#" class="form__ingredient-link">Удалить</a>
+</div>
 
 {% block script %}
     <script src="{% static 'js/config/config.js' %}"></script>
@@ -171,4 +179,5 @@
     <script src="{% static 'js/api/Api.js' %}"></script>
     <script src="{% static 'formRecipe.js' %}"></script>
 {% endblock %}
+
 

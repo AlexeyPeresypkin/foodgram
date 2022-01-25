@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, \
+    DeleteView
 
 from foodgram.settings import PAGINATE_COUNT
 from recipes.forms import RecipeForm
@@ -93,6 +94,20 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('recipe_detail', kwargs={'pk': self.object.pk})
+
+
+class RecipeEditView(LoginRequiredMixin, UpdateView):
+    model = Recipe
+    template_name = 'recipe_change.html'
+    form_class = RecipeForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user != self.get_object().author:
+            return reverse_lazy("recipes:recipe", kwargs.get("pk"))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('recipe_detail', kwargs={'pk': self.object.pk})
