@@ -46,6 +46,7 @@ class RecipeForm(ModelForm):
         recipe = super().save(commit=False)
         recipe.save()
         ingridients_quantity = self.quantity
+        recipe.recipe_ingridient.all().delete()
         ingridients = [
             RecipeIngredient(
                 recipe=recipe,

@@ -9,7 +9,7 @@ class RecipeMixin:
         if self.request.user.is_authenticated:
             favorites = self.request.user.favorites.all(). \
                 values_list('recipe_id', flat=True)
-            shoplist = self.request.user.shop_list.all().\
+            shoplist = self.request.user.shop_list.all(). \
                 values_list('recipe_id', flat=True)
             context['favorites'] = favorites
             context['shoplist'] = shoplist
@@ -23,3 +23,10 @@ class TagsMixin:
         if q:
             return queryset.filter(tags__slug__in=q).distinct()
         return queryset
+
+
+class IsAuthorMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user != self.get_object().author:
+            return reverse_lazy("recipes:recipe", kwargs.get("pk"))
+        return super().dispatch(request, *args, **kwargs)

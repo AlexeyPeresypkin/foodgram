@@ -28,12 +28,14 @@
                                 class="icon-time"></span> {{ recipe.time_cooking }}
                         </p>
                     </div>
-                    <a href="#" class="shopping-list__button link">Удалить</a>
+                    <form action="{% url 'shop_list_delete_item' request.user.id recipe.id %}" method="post">
+                        {% csrf_token %} <input type="submit" value="Удалить" class="shopping-list__button link">
+                    </form>
                 </li>
             {% endfor %}
         </ul>
         <a href="#">
-            <button class="button button_style_blue">Скачать список</button>
+            <button class="button button_style_blue">Скачать список </button>
         </a>
     </div>
 {% endblock %}

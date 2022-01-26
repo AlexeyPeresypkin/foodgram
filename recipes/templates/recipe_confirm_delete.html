@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Рецепт удалён{% endblock %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="custom-center-block">
+        <p class="custom-text-block">Рецепт будет безвозвратно удалён, подтверждаете?</p>
+        <div class="custom-button-block">
+        <form action="" method="post">{% csrf_token %}
+            <input type="submit" value="Подтвердить"
+                   class="button button_style_blue "/>
+        </form>
+        </div>
+    </div>
+{% endblock %}

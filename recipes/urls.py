@@ -16,16 +16,69 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from recipes.views import RecipesListView, RecipeDetailView, RecipesByAuthor, \
-    RecipesFollow, RecipesFavorite, ShopList, RecipeCreateView, RecipeEditView
+from recipes.views import (
+    RecipesListView,
+    RecipeDetailView,
+    RecipesByAuthor,
+    RecipesFollow,
+    RecipesFavorite,
+    ShopListView,
+    RecipeCreateView,
+    RecipeEditView,
+    RecipeDeleteView,
+    RecipeShopItemDeleteView,
+
+)
 
 urlpatterns = [
-    path('', RecipesListView.as_view(), name='index'),
-    path('recipe/<int:pk>/', RecipeDetailView.as_view(), name='recipe_detail'),
-    path('recipe/follow/<int:pk>', RecipesFollow.as_view(), name='recipes_follow'),
-    path('recipe/new/', RecipeCreateView.as_view(), name='recipe_create'),
-    path('recipe/edit/<int:pk>/', RecipeEditView.as_view(), name='recipe_edit'),
-    path('author/<int:pk>/', RecipesByAuthor.as_view(), name='recipes_by_author'),
-    path('favirite/<int:pk>/', RecipesFavorite.as_view(), name='recipes_favorite'),
-    path('shoplist/<int:pk>/', ShopList.as_view(), name='shop_list'),
+    path(
+        '',
+        RecipesListView.as_view(),
+        name='index'
+    ),
+    path(
+        'recipe/<int:pk>/',
+        RecipeDetailView.as_view(),
+        name='recipe_detail'
+    ),
+    path(
+        'recipe/follow/<int:pk>',
+        RecipesFollow.as_view(),
+        name='recipes_follow'
+    ),
+    path(
+        'recipe/new/',
+        RecipeCreateView.as_view(),
+        name='recipe_create'
+    ),
+    path(
+        'recipe/edit/<int:pk>/',
+        RecipeEditView.as_view(),
+        name='recipe_edit'
+    ),
+    path(
+        'recipe/delete/<int:pk>/',
+        RecipeDeleteView.as_view(),
+        name='recipe_delete'
+    ),
+    path(
+        'author/<int:pk>/',
+        RecipesByAuthor.as_view(),
+        name='recipes_by_author'
+    ),
+    path(
+        'favirite/<int:pk>/',
+        RecipesFavorite.as_view(),
+        name='recipes_favorite'
+    ),
+    path(
+        'shoplist/<int:pk>/',
+        ShopListView.as_view(),
+        name='shop_list'
+    ),
+    path(
+        'shoplist/<int:pk>/delete/<int:recipe_id>',
+        RecipeShopItemDeleteView.as_view(),
+        name='shop_list_delete_item'
+    ),
 ]

@@ -7,8 +7,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, \
 
 from foodgram.settings import PAGINATE_COUNT
 from recipes.forms import RecipeForm
-from recipes.models import Recipe, Tags, Follow
-from recipes.viewmixins import RecipeMixin, TagsMixin
+from recipes.models import Recipe, Tags, ShopList
+from recipes.viewmixins import RecipeMixin, TagsMixin, IsAuthorMixin
 
 User = get_user_model()
 
@@ -68,7 +68,7 @@ class RecipesFollow(LoginRequiredMixin, ListView):
         return authors
 
 
-class ShopList(LoginRequiredMixin, ListView):
+class ShopListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'shopList.html'
     context_object_name = 'recipes'
@@ -99,18 +99,45 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('recipe_detail', kwargs={'pk': self.object.pk})
 
 
-class RecipeEditView(LoginRequiredMixin, UpdateView):
+class RecipeEditView(LoginRequiredMixin, IsAuthorMixin, UpdateView):
     model = Recipe
     template_name = 'recipe_change.html'
     form_class = RecipeForm
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user != self.get_object().author:
-            return reverse_lazy("recipes:recipe", kwargs.get("pk"))
-        return super().dispatch(request, *args, **kwargs)
-
     def get_success_url(self):
         return reverse_lazy('recipe_detail', kwargs={'pk': self.object.pk})
+
+
+class RecipeDeleteView(LoginRequiredMixin, IsAuthorMixin, DeleteView):
+    model = Recipe
+    success_url = reverse_lazy('index')
+    template_name = 'recipe_confirm_delete.html'
+
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy("index")
+
+
+class RecipeShopItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = ShopList
+
+    def get_object(self, queryset=None):
+        user = User.objects.get(pk=self.kwargs.get('pk'))
+        recipe = Recipe.objects.get(pk=self.kwargs.get('recipe_id'))
+        print(recipe)
+        print(user)
+        obj = get_object_or_404(ShopList, user__id=user.id,
+                                recipe__id=recipe.id)
+        return obj
+
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
+    def get_success_url(self):
+        pk = self.kwargs.get('pk')
+        return reverse_lazy("shop_list", kwargs={'pk': pk})
 
 
 def page_not_found(request, exception):
