@@ -27,6 +27,7 @@ from recipes.views import (
     RecipeEditView,
     RecipeDeleteView,
     RecipeShopItemDeleteView,
+    ShopListDownloadView,
 
 )
 
@@ -80,5 +81,10 @@ urlpatterns = [
         'shoplist/<int:pk>/delete/<int:recipe_id>',
         RecipeShopItemDeleteView.as_view(),
         name='shop_list_delete_item'
+    ),
+    path(
+        'shoplist/<int:pk>/download',
+        ShopListDownloadView.as_view(),
+        name='shop_list_download'
     ),
 ]

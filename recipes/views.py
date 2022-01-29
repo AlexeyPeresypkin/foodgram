@@ -1,7 +1,16 @@
+import codecs
+import csv
+import io
+import reportlab
+from reportlab.pdfgen import canvas
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, \
     DeleteView
 
@@ -138,6 +147,30 @@ class RecipeShopItemDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         pk = self.kwargs.get('pk')
         return reverse_lazy("shop_list", kwargs={'pk': pk})
+
+
+class ShopListDownloadView(View):
+    def get(self, request, *args, **kwargs):
+        ingredients = Recipe.objects.values(
+            'ingridients__title', 'ingridients__dimension'
+        ) \
+            .filter(shop_list__user=self.request.user) \
+            .annotate(Sum('recipe_ingridient__quantity')) \
+            .order_by('ingridients__title')
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={
+                'Content-Disposition': 'attachment; filename="shop_list.csv"'},
+        )
+        writer = csv.writer(response, delimiter=';')
+        writer.writerow(['Ингридиент', 'Кол-во', 'Единица измерения'])
+        for ingredient in ingredients:
+            writer.writerow([
+                ingredient['ingridients__title'],
+                ingredient['recipe_ingridient__quantity__sum'],
+                ingredient['ingridients__dimension'],
+            ])
+        return HttpResponse(response)
 
 
 def page_not_found(request, exception):

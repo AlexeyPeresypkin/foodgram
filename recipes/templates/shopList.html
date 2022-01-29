@@ -34,7 +34,7 @@
                 </li>
             {% endfor %}
         </ul>
-        <a href="#">
+        <a href="{% url 'shop_list_download' request.user.id %}">
             <button class="button button_style_blue">Скачать список </button>
         </a>
     </div>
