@@ -1,8 +1,4 @@
-import codecs
 import csv
-import io
-import reportlab
-from reportlab.pdfgen import canvas
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
