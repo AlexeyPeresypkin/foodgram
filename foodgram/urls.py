@@ -28,7 +28,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(
         'about-author/',
-        views.flatpage, {'url': 'about-author/'},
+        views.flatpage,
+        {'url': 'about-author/'},
         name='about_author'
     ),
     path(

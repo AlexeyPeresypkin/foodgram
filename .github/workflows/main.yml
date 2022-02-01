@@ -1,4 +1,4 @@
-name: Foodgram workflow
+name: FoodgramWorkflow
 
 # Controls when the workflow will run
 on: [ push ]

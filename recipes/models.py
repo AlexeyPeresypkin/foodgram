@@ -133,6 +133,10 @@ class RecipeIngredient(models.Model):
         verbose_name='Количество',
     )
 
+    class Meta:
+        verbose_name = 'Ингридиенты рецепта'
+        verbose_name_plural = 'Ингридиенты рецептов'
+
 
 class Follow(models.Model):
     user = models.ForeignKey(User,
