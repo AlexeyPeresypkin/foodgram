@@ -62,4 +62,3 @@ class IngridientApiSerializer(ListAPIView):
         queryset = Ingridient.objects.all()
         query = self.request.query_params.get('query')
         return queryset.filter(title__icontains=query)
-
