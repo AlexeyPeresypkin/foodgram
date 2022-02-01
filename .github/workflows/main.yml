@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Foodgram workflow
 
 # Controls when the workflow will run
@@ -29,7 +27,7 @@ jobs:
 #      run: pytest tests.py
 
 
- build_and_push_to_docker_hub:
+  build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     needs: tests
