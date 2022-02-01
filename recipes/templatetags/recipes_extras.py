@@ -43,4 +43,3 @@ def url_replace(context, **kwargs):
 @register.filter()
 def shop_list_count(request):
     return request.user.shop_list.count()
-
