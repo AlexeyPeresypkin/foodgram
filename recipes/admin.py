@@ -7,10 +7,23 @@ from recipes.models import Recipe, Follow, Ingridient, RecipeIngredient, Tags, \
 User = get_user_model()
 
 
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', )
-    list_filter = ('author', 'title', 'tags')
+    inlines = (RecipeIngredientInline,)
+    list_display = ('title', 'author', 'favorite_count')
+    list_filter = ('author', 'tags')
+    search_fields = ('title', 'author__username',)
+    readonly_fields = ('favorite_count',)
+    prepopulated_fields = {'slug': ('title',)}
+
+    @admin.display(description='Рецепт в избранном')
+    def favorite_count(self, obj):
+        return obj.favorites.count()
 
 
 @admin.register(Follow)
@@ -21,6 +34,7 @@ class FollowAdmin(admin.ModelAdmin):
 @admin.register(Ingridient)
 class IngridientAdmin(admin.ModelAdmin):
     list_display = ('title', 'dimension')
+    search_fields = ('title',)
 
 
 @admin.register(RecipeIngredient)

@@ -122,11 +122,13 @@ class RecipeIngredient(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         related_name='recipe_ingridient',
+        verbose_name='Рецепт'
     )
     ingridient = models.ForeignKey(
         Ingridient,
         on_delete=models.CASCADE,
         related_name='recipe_ingridient',
+        verbose_name='Ингридиент'
     )
     quantity = models.SmallIntegerField(
         validators=[MinValueValidator(1)],
@@ -169,12 +171,14 @@ class Favorite(models.Model):
         on_delete=models.CASCADE,
         related_name='favorites',
         null=True,
+        verbose_name='Рецепт'
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='favorites',
         null=True,
+        verbose_name='Пользователь'
     )
 
     def __str__(self):
@@ -195,12 +199,14 @@ class ShopList(models.Model):
         on_delete=models.CASCADE,
         related_name='shop_list',
         null=True,
+        verbose_name='Рецепт'
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='shop_list',
         null=True,
+        verbose_name='Пользователь'
     )
 
     class Meta:
