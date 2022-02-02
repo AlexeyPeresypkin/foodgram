@@ -22,13 +22,10 @@ class RecipeForm(ModelForm):
     def __init__(self, data=None, *args, **kwargs):
         if data:
             data = data.copy()
-            # for k, v in data.items():
-            #     print(k, v)
             for tag in ('breakfast', 'lunch', 'dinner'):
                 if tag in data:
                     data.update({'tags': Tags.objects.get(slug=tag)})
             ingridients = self.get_ingridients(data)
-            # print(ingridients)
             for ingridient in ingridients:
                 try:
                     data.update(

@@ -104,7 +104,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('recipe_detail', kwargs={'pk': self.object.pk})
 
 
-class RecipeEditView(LoginRequiredMixin, IsAuthorMixin, UpdateView):
+class RecipeEditView(IsAuthorMixin, LoginRequiredMixin, UpdateView):
     model = Recipe
     template_name = 'recipe_change.html'
     form_class = RecipeForm
@@ -115,7 +115,7 @@ class RecipeEditView(LoginRequiredMixin, IsAuthorMixin, UpdateView):
 
 class RecipeDeleteView(LoginRequiredMixin, IsAuthorMixin, DeleteView):
     model = Recipe
-    success_url = reverse_lazy('index')
+    success_url = 'index'
     template_name = 'recipe_confirm_delete.html'
 
     def get(self, *args, **kwargs):

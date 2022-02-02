@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
 from .models import Tags, ShopList
@@ -28,5 +29,5 @@ class TagsMixin:
 class IsAuthorMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.user != self.get_object().author:
-            return reverse_lazy("recipes:recipe", kwargs.get("pk"))
+            return redirect("recipe_detail", kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
