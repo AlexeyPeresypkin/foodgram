@@ -20,16 +20,21 @@ services:
     env_file:
       - ./.env
   web:
-    build: .
+#    build: .
+    image:
+      alexeyperesypkin/foodgram:latest
     restart: always
+    volumes:
+      - static_value:/code/static/
+      - media_value:/code/media/
     command: >
       sh -c "
       python manage.py migrate --noinput
       && python manage.py collectstatic --noinput
       && gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000"
-    ports:
-      - "8000:8000"
-    # "зависит от",
+#    ports:
+#      - "8000:8000"
+#    # "зависит от",
     depends_on:
       - db
     env_file:
